@@ -1,5 +1,9 @@
 #include "update.h"
+#include "config.h"
+#include "field.h"
 #include "gamestate.h"
+#include "job.h"
+#include "job_field.h"
 #include <stdlib.h>
 
 
@@ -61,8 +65,20 @@ static void step_actor(Actor* actor) {
 
 
 static void tick_bush(BerryBush* bush) {
+	if ((rand() % 100) < 5) {
+		bush->wither++;
+		if (bush->wither >= 20)
+			bush->berry_c = 0;
+	}
 	if (rand() % 100 > 20)
 		return;
+	if (bush->wither > 20) {
+		bush->x = rand() % MAP_WIDTH;
+		bush->y = rand() % MAP_HEIGHT;
+		bush->berry_c = 0;
+		bush->tick = 0;
+		bush->wither = 0;
+	}
 	bush->tick++;
 	if (bush->tick > 10) {
 		bush->berry_c++;
@@ -75,6 +91,20 @@ void init(GameState* gamestate) {
 }
 
 void update(GameState* gamestate) {
+	if (job_is_empty(&gamestate->job_queue)) {
+		Job job;
+		field_job_query(&gamestate->field, &job);
+
+		if (job.context)
+			job_push(&gamestate->job_queue, job);
+		return;
+	}
+	job_execute(&gamestate->job_queue, gamestate);
+
+	field_update(&gamestate->field);
+	
+
+	/*
 	int target_distance = distance(gamestate->player.x, gamestate->player.y, gamestate->player.target_x, gamestate->player.target_y);
 	if (target_distance < 2) {
 		try_forage(gamestate);
@@ -84,5 +114,6 @@ void update(GameState* gamestate) {
 	step_actor(&gamestate->player);
 	for (int i = 0; i < BERRY_SIZE; i++)
 		tick_bush(&gamestate->berries[i]);
+	*/
 }
 

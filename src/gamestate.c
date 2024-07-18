@@ -1,5 +1,7 @@
 #include "gamestate.h"
 #include "config.h"
+#include "field.h"
+#include "job.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -22,8 +24,17 @@ GameState gamestate_create() {
 		gamestate.berries[i].y = y;
 		gamestate.berries[i].berry_c = rand() % 3;
 		gamestate.berries[i].tick = rand() % 5;
+		gamestate.berries[i].wither = rand() % 5;
 	}
 
+	gamestate.field = field_create(10, 10, 6, 4, PLANT_CARROT);
+	gamestate.job_queue = jobqueue_create();
+
 	return gamestate;
+}
+
+
+void gamestate_destroy(GameState *gamestate) {
+	job_clear_queue(&gamestate->job_queue);
 }
 
