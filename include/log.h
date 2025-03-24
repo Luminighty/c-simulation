@@ -17,7 +17,7 @@ typedef enum {
 
 typedef struct {
 	LogMessageLevel level;
-	const char* message;
+	char message[LOG_MESSAGE_SIZE];
 	int timestamp;
 	int id;
 } Log;

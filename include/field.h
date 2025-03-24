@@ -2,7 +2,8 @@
 #define _FIELD_H_
 
 #define FIELD_SIZE 36
-#define FIELD_MAX_WATER 150
+
+extern const int FIELD_MAX_WATER;
 
 
 typedef enum {
@@ -10,6 +11,7 @@ typedef enum {
 	PLANT_CARROT,
 	PLANT_TURNIP,
 	PLANT_POTATO,
+	PLANT_ONION,
 } Plant;
 
 
@@ -31,6 +33,7 @@ typedef struct {
 	Plant plant;
 	int amount;
 } HarvestResult;
+
 
 FieldTile* field_find_tile(Field* field, int x, int y);
 Field field_create(int x, int y, int w, int h, Plant target);

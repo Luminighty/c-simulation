@@ -1,5 +1,6 @@
 #include "log.h"
 #include "SDL_timer.h"
+#include <stdio.h>
 #include <strings.h>
 
 
@@ -10,7 +11,12 @@ static void log_with_level(const char* message, LogMessageLevel level) {
 	if (level > logger.level)
 		return;
 	Log log;
-	log.message = message;
+	int i = 0;
+	while(message[i] && i < LOG_MESSAGE_SIZE - 1) {
+		log.message[i] = message[i];
+		i++;
+	}
+	log.message[i] = '\0';
 	log.level = level;
 	log.id = ++logger.id;
 	log.timestamp = SDL_GetTicks();

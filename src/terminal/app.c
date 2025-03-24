@@ -1,4 +1,4 @@
-#include "app.h"
+#include "terminal/app.h"
 #include "SDL_rect.h"
 #include "SDL_stdinc.h"
 #include "SDL_video.h"

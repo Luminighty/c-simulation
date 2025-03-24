@@ -1,4 +1,4 @@
-#include "color.h"
+#include "terminal/color.h"
 
 
 const Color RED = { 255, 0, 0 };
@@ -12,6 +12,7 @@ const Color TEAL = { 0, 255, 255 };
 const Color WHITE = { 255, 255, 255 };
 const Color BLACK = { 0, 0, 0 };
 const Color BROWN = { 100, 60, 50 };
+const Color LIGHT_BROWN = { 220, 145, 70 };
 const Color ORANGE = { 255, 77, 0 };
 
 

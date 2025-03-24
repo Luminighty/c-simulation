@@ -16,6 +16,7 @@ extern const Color TEAL;
 extern const Color WHITE;
 extern const Color BLACK;
 extern const Color BROWN;
+extern const Color LIGHT_BROWN;
 extern const Color ORANGE;
 
 

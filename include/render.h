@@ -2,7 +2,7 @@
 #define _RENDER_H_
 
 #include "gamestate.h"
-#include "terminal.h"
+#include "terminal/terminal.h"
 
 
 void render(Terminal* terminal, GameState* gamestate);

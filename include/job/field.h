@@ -1,12 +1,14 @@
 #ifndef _JOB_FIELD_H_
 #define _JOB_FIELD_H_
 
-#include "../field.h"
-#include "job.h"
+#include "field.h"
+#include "job/job.h"
+#include "gamestate.h"
 
 
 typedef struct {
 	Field* field;
+	Actor* actor;
 } FieldJobContext;
 
 

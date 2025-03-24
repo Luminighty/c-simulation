@@ -1,4 +1,4 @@
-#include "job.h"
+#include "job/job.h"
 #include "log.h"
 
 
@@ -17,10 +17,17 @@ Job job_create(
 ) {
 	Job job;
 	job.priority = priority;
+	job.assignee = 0;
 	job.context = context;
 	job.execute = execute;
 	job.free = _free;
+	job.is_closed = false;
 	return job;
+}
+
+
+void job_assign(Job *job, void *assignee) {
+	job->assignee = assignee;
 }
 
 
@@ -30,14 +37,22 @@ void job_destroy(Job* job) {
 }
 
 
+void job_close(Job *job) {
+	if (job)
+		job->is_closed = true;
+}
+
+
 void job_update(Job *job, Job other) {
 	if (job)
 		job_destroy(job);
+	job->is_closed = other.is_closed;
 	job->context = other.context;
 	job->free = other.free;
 	job->priority = other.priority;
 	job->execute = other.execute;
 }
+
 
 void job_pop(JobQueue *queue) {
 	if (queue->length > 0) {
@@ -64,11 +79,12 @@ bool job_is_empty(JobQueue *queue) {
 }
 
 
-static Job* job_head(JobQueue* queue) {
+Job* job_head(JobQueue* queue) {
 	if (queue->length == 0)
 		return 0;
 	return &queue->queue[queue->length - 1];
 }
+
 
 void job_execute(JobQueue *queue, void *world_context) {
 	Job* head = job_head(queue);
@@ -84,3 +100,11 @@ void job_clear_queue(JobQueue *queue) {
 	while(!job_is_empty(queue))
 		job_pop(queue);
 }
+
+
+bool job_compare(Job *previous, int new_priority) {
+	if (previous)
+		return previous->priority < new_priority;
+	return true;
+}
+

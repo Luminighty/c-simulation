@@ -1,11 +1,10 @@
 #include "render.h"
 #include "SDL_stdinc.h"
-#include "color.h"
+#include "terminal/color.h"
 #include "field.h"
 #include "gamestate.h"
 #include "log.h"
-#include "terminal.h"
-#include <stdio.h>
+#include "terminal/terminal.h"
 
 
 static Color PURPLE = { 120, 0, 255 };
@@ -41,6 +40,7 @@ static Color log_color(LogMessageLevel level) {
 	}
 }
 
+
 static void print_logs(Terminal* terminal) {
 	for (int i = 0; i < 10; i++) {
 		Log* log = logger_get(i);
@@ -51,13 +51,14 @@ static void print_logs(Terminal* terminal) {
 	}
 }
 
+
 static void render_field_tile(Terminal* terminal, FieldTile* tile, int x, int y) {
-	Color bg = tile->water > 10 ? DARK_BLUE : BLACK;
+	Color bg = tile->water > 50 ? DARK_BLUE : BLACK;
 	Color fg;
 	unsigned char c;
 	switch (tile->plant) {
 	case PLANT_NONE:
-		c = 0xB0;
+		c = 0xF7;
 		fg = BROWN;
 		break;
 	case PLANT_CARROT:
@@ -66,11 +67,15 @@ static void render_field_tile(Terminal* terminal, FieldTile* tile, int x, int y)
 		break;
 	case PLANT_POTATO:
 		c = tile->time_left > 15 ? 0x2C : 'o';
-		fg = tile->time_left > 5 ? GREEN : BROWN;
+		fg = tile->time_left > 5 ? GREEN : LIGHT_BROWN;
 		break;
 	case PLANT_TURNIP:
 		c = tile->time_left > 15 ? 0x2C : 0xF2;
 		fg = tile->time_left > 5 ? GREEN : RED;
+		break;
+	case PLANT_ONION:
+		c = tile->time_left > 15 ? 0x2C : 0xEB;
+		fg = tile->time_left > 5 ? GREEN : LIGHT_BROWN;
 		break;
 	}
 	terminal_put(terminal, x, y, c, fg, bg);
@@ -84,6 +89,7 @@ static void render_field(Terminal* terminal, Field* field) {
 		render_field_tile(terminal, &field->tiles[i], x + field->x, y + field->y);
 	}
 }
+
 
 void render(Terminal* terminal, GameState *gamestate) {
 	terminal_clear(terminal);
@@ -107,18 +113,25 @@ void render(Terminal* terminal, GameState *gamestate) {
 			gamestate->berries[i].berry_c > 0 ? PURPLE : BLACK
 		);
 
-	render_field(terminal, &gamestate->field);
-	
-	terminal_put(
-		terminal, 
-		gamestate->player.x,
-		gamestate->player.y,
-		0x02, WHITE, BLACK
-	);
+	for (int i = 0; i < FIELD_AMOUNT; i++)
+		render_field(terminal, &gamestate->fields[i]);
 
-	render_str(terminal, 0, 0, "berries: ", WHITE, BLACK);
-	render_num(terminal, 9, 0, gamestate->player.berry_count, WHITE, BLACK);
+	for (int i = 0; i < ACTOR_SIZE; i++)
+		terminal_put(
+			terminal, 
+			gamestate->actors[i].x,
+			gamestate->actors[i].y,
+			0x01 + i, WHITE, BLACK
+		);
 
+	render_str(terminal, 0, 0, "carrots:  ", WHITE, BLACK);
+	render_str(terminal, 0, 1, "turnips:  ", WHITE, BLACK);
+	render_str(terminal, 0, 2, "potatoes: ", WHITE, BLACK);
+	render_str(terminal, 0, 3, "onions:  ", WHITE, BLACK);
+	render_num(terminal, 10, 0, gamestate->carrots, WHITE, BLACK);
+	render_num(terminal, 10, 1, gamestate->turnips, WHITE, BLACK);
+	render_num(terminal, 10, 2, gamestate->potatoes, WHITE, BLACK);
+	render_num(terminal, 10, 3, gamestate->onions, WHITE, BLACK);
 
 	print_logs(terminal);
 }

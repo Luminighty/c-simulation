@@ -1,11 +1,11 @@
 #include <SDL2/SDL.h>
 #include "config.h"
-#include "app.h"
+#include "terminal/app.h"
 #include "gamestate.h"
 #include "log.h"
 #include "poll_events.h"
 #include "render.h"
-#include "terminal.h"
+#include "terminal/terminal.h"
 #include "update.h"
 
 
@@ -17,6 +17,7 @@ void log_test() {
 }
 
 int main() {
+
 	logger_create(LOG_LEVEL_DEBUG);
 	App app = app_create();
 	GameState gamestate = gamestate_create();

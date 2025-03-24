@@ -3,6 +3,9 @@
 #include <stdlib.h>
 
 
+const int FIELD_MAX_WATER = 500;
+
+
 Field field_create(int x, int y, int w, int h, Plant target) {
 	Field field;
 	field.x = x;
@@ -29,6 +32,8 @@ void field_plant(Field *field, int x, int y, Plant plant) {
 	FieldTile* tile = field_find_tile(field, x, y);
 	if (!tile)
 		return;
+	tile->plant = plant;
+	tile->time_left = 500;
 }
 
 
@@ -42,15 +47,18 @@ void field_water(Field *field, int x, int y) {
 
 void field_update(Field *field) {
 	for (int i = 0; i < field->w * field->h; i++) {
-		if (field->tiles[i].water > 0)
+		if (field->tiles[i].water > 0) {
 			field->tiles[i].water -= rand() % 2;
+			if (field->tiles[i].water <= 0)
+				log_message("Plant died...");
+		}
 		if (field->tiles[i].plant == PLANT_NONE)
 			continue;
 		field->tiles[i].time_left -= rand() % 2;
-
-		if (field->tiles[i].water < 0) {
+		if (field->tiles[i].water <= 0) {
 			field->tiles[i].plant = PLANT_NONE;
 			field->tiles[i].time_left = 0;
+			log_message("Plant died...");
 		}
 	}
 }

@@ -2,7 +2,7 @@
 #define _TERMINAL_H_
 
 #include <SDL2/SDL.h>
-#include "color.h"
+#include "terminal/color.h"
 
 #define TERMINAL_WIDTH 40
 #define TERMINAL_HEIGHT 40

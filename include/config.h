@@ -3,7 +3,7 @@
 
 const static int CHAR_WIDTH = 8;
 const static int CHAR_HEIGHT = 8;
-const static int CHAR_SCALE = 1;
+const static int CHAR_SCALE = 2;
 
 const static char* WINDOW_TITLE = "Simulation";
 
